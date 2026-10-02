@@ -1,0 +1,64 @@
+.gallery {
+  position: relative;
+  z-index: 3;
+  padding: clamp(84px, 13vh, 150px) 0 clamp(80px, 12vh, 140px);
+  color: #fff;
+}
+
+.gallery__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    var(--blue-dots),
+    radial-gradient(45% 35% at 50% 34%, rgba(90, 169, 224, 0.22), transparent 72%);
+}
+
+.gallery__head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.gallery__kicker {
+  color: var(--kv-star);
+}
+
+.gallery__title {
+  margin-top: 14px;
+  font-size: var(--fs-h2);
+}
+
+.gallery__title-pop {
+  color: var(--kv-star);
+}
+
+.gallery__lede {
+  max-width: 34em;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: var(--fs-lead);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.gallery__ig {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: clamp(56px, 9vh, 90px);
+  text-align: center;
+}
+
+.gallery__ig p {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 700;
+}
+
+.btn__icon--ig {
+  background: linear-gradient(45deg, #f9ce34, #ee2a7b 55%, #6228d7);
+}
+

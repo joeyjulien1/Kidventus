@@ -1,0 +1,347 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  padding: 12px var(--gutter) 0;
+  pointer-events: none;
+  transition: transform 0.5s var(--ease-out), padding 0.4s var(--ease-out);
+}
+
+.nav.is-scrolled {
+  padding-top: 10px;
+}
+
+.nav.is-hidden {
+  transform: translateY(calc(-100% - 64px));
+}
+
+.nav__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 1240px;
+  height: 66px;
+  margin: 0 auto;
+  padding: 0 8px 0 14px;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-pill);
+  pointer-events: auto;
+  transition:
+    background-color 0.45s,
+    border-color 0.45s,
+    box-shadow 0.45s,
+    height 0.45s var(--ease-out),
+    max-width 0.6s var(--ease-out);
+}
+
+.nav.is-scrolled .nav__bar {
+  max-width: 1120px;
+  height: 60px;
+  background: rgba(27, 8, 54, 0.8);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 14px 34px rgba(10, 0, 30, 0.28);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  backdrop-filter: blur(14px) saturate(1.5);
+}
+
+.nav__brand {
+  display: block;
+  flex: none;
+  border-radius: 12px;
+  transition: transform 0.3s var(--ease-bounce);
+}
+
+@media (hover: hover) {
+  .nav__brand:hover {
+    transform: rotate(-3deg) scale(1.05);
+  }
+}
+
+.nav__logo {
+  width: 96px;
+  transition: width 0.45s var(--ease-out);
+}
+
+.nav.is-scrolled .nav__logo {
+  width: 84px;
+}
+
+.nav__links-wrap {
+  position: relative;
+  margin-left: auto;
+}
+
+.nav__links {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: var(--radius-pill);
+  background: var(--kv-star);
+  box-shadow: 0 3px 0 var(--kv-plum-deep);
+  transition:
+    transform 0.55s var(--ease-bounce),
+    width 0.55s var(--ease-bounce),
+    opacity 0.3s;
+  pointer-events: none;
+}
+
+.nav__link {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  border-radius: var(--radius-pill);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav__link.is-active {
+  color: var(--violet-900);
+}
+
+@media (hover: hover) {
+  .nav__link:not(.is-active):hover {
+    color: var(--kv-star);
+  }
+}
+
+.nav__cta {
+  flex: none;
+}
+
+.nav__cta-short {
+  display: none;
+}
+
+.nav__burger {
+  display: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.nav__burger-lines {
+  display: grid;
+  gap: 5px;
+  width: 20px;
+}
+
+.nav__burger-lines span {
+  display: block;
+  height: 2.5px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.3s var(--ease-out), opacity 0.3s;
+}
+
+.nav__burger-lines span:nth-child(2) {
+  width: 70%;
+  margin-left: auto;
+}
+
+.nav__progress {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: -1px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--kv-star), var(--magenta), var(--kv-blue));
+  transform: scaleX(var(--p, 0));
+  transform-origin: 0 50%;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.nav.is-scrolled .nav__progress {
+  opacity: 1;
+}
+
+/* Hide the bar while a full-screen menu is open */
+.nav.is-open .nav__bar {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+@media (max-width: 1080px) {
+  .nav__link {
+    padding: 10px 11px;
+    font-size: 0.9rem;
+  }
+
+  .nav__cta-label {
+    display: none;
+  }
+
+  .nav__cta-short {
+    display: inline;
+  }
+}
+
+@media (max-width: 899.98px) {
+  .nav {
+    padding: 8px 12px 0;
+  }
+
+  .nav__bar {
+    height: 58px;
+    gap: 10px;
+    padding: 0 6px 0 10px;
+  }
+
+  .nav.is-scrolled .nav__bar {
+    height: 56px;
+  }
+
+  .nav__logo,
+  .nav.is-scrolled .nav__logo {
+    width: 80px;
+  }
+
+  .nav__links-wrap {
+    display: none;
+  }
+
+  .nav__cta {
+    margin-left: auto;
+    min-height: 42px;
+  }
+
+  .nav__burger {
+    display: grid;
+  }
+
+  .nav__progress {
+    left: 20px;
+    right: 20px;
+  }
+}
+
+/* ---------- Mobile menu ---------- */
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 24px calc(24px + var(--safe-bottom));
+  overflow-y: auto;
+  background:
+    radial-gradient(70% 50% at 100% 0%, rgba(240, 56, 143, 0.35), transparent 70%),
+    radial-gradient(70% 50% at 0% 100%, rgba(46, 107, 255, 0.35), transparent 70%),
+    var(--violet-900);
+  color: #fff;
+}
+
+.menu__close {
+  align-self: flex-end;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--kv-star);
+  color: var(--violet-900);
+  border: var(--sticker-stroke) solid var(--kv-plum-deep);
+  box-shadow: 0 4px 0 var(--kv-plum-deep);
+}
+
+.menu__close svg {
+  width: 22px;
+  height: 22px;
+}
+
+.menu__list {
+  display: grid;
+  gap: 4px;
+  margin: 18px 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.menu__link {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 8px 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 10vw, 3.4rem);
+  line-height: 1.05;
+  color: #fff;
+  text-decoration: none;
+}
+
+.menu__link.is-active {
+  color: var(--kv-star);
+}
+
+.menu__num {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: var(--pink);
+  letter-spacing: 0.1em;
+}
+
+.menu__foot {
+  display: grid;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.menu__wa {
+  width: 100%;
+}
+
+.menu__phones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 18px;
+  font-weight: 800;
+}
+
+.menu__phones a,
+.menu__ig {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+}
+
+.menu__ig {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.menu__ig svg {
+  width: 20px;
+  height: 20px;
+}
+
+html.menu-open,
+html.menu-open body {
+  overflow: hidden;
+}

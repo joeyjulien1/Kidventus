@@ -1,0 +1,156 @@
+.art {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.art__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ---------- Birthday ---------- */
+
+.ba-bunting {
+  transform-box: view-box;
+  transform-origin: 300px 0;
+  animation: ba-swing 5s ease-in-out infinite;
+}
+
+.ba-flag {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: ba-flag 2.4s ease-in-out infinite;
+}
+
+@keyframes ba-swing {
+  0%,
+  100% {
+    transform: rotate(-1.2deg);
+  }
+  50% {
+    transform: rotate(1.2deg);
+  }
+}
+
+@keyframes ba-flag {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+.ba-flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ba-flicker 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes ba-flicker {
+  0% {
+    transform: scale(1, 1) skewX(0deg);
+  }
+  35% {
+    transform: scale(0.92, 1.08) skewX(-4deg);
+  }
+  70% {
+    transform: scale(1.06, 0.95) skewX(3deg);
+  }
+  100% {
+    transform: scale(0.96, 1.05) skewX(-2deg);
+  }
+}
+
+.ba-confetti {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: ba-confetti 3.6s ease-in-out infinite;
+}
+
+@keyframes ba-confetti {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(30deg);
+  }
+}
+
+.ba-gift {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ba-gift 3s ease-in-out infinite;
+}
+
+.ba-gift--r {
+  animation-delay: -1.5s;
+}
+
+@keyframes ba-gift {
+  0%,
+  86%,
+  100% {
+    transform: scale(1, 1);
+  }
+  90% {
+    transform: scale(1.06, 0.92);
+  }
+  95% {
+    transform: scale(0.96, 1.06);
+  }
+}
+
+.ba-balloons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ba-balloon {
+  position: absolute;
+}
+
+.ba-balloon--1 {
+  left: -2%;
+  top: 4%;
+  width: 19%;
+}
+
+.ba-balloon--2 {
+  right: -1%;
+  top: 0;
+  width: 17%;
+}
+
+.ba-balloon--3 {
+  left: 12%;
+  top: 20%;
+  width: 13%;
+}
+
+.ba-balloon__float {
+  animation: balloon-bob 5s ease-in-out infinite;
+  --tilt: -6deg;
+}
+
+.ba-balloon--2 .ba-balloon__float {
+  animation-delay: -2s;
+  --tilt: 7deg;
+}
+
+.ba-balloon--3 .ba-balloon__float {
+  animation-delay: -3.4s;
+  --tilt: 4deg;
+}
+
+.ba-balloon svg {
+  width: 100%;
+  height: auto;
+}

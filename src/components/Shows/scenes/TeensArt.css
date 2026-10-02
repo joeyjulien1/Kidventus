@@ -1,0 +1,120 @@
+.tg-beams {
+  mix-blend-mode: screen;
+}
+
+.tg-beam {
+  transform-box: view-box;
+  transform-origin: 300px 150px;
+  animation: tg-sweep 4.2s ease-in-out infinite alternate;
+}
+
+@keyframes tg-sweep {
+  from {
+    transform: rotate(calc(var(--a) - 14deg));
+  }
+  to {
+    transform: rotate(calc(var(--a) + 14deg));
+  }
+}
+
+.tg-facets {
+  animation: tg-spin 1.6s linear infinite;
+}
+
+@keyframes tg-spin {
+  to {
+    transform: translateX(15px);
+  }
+}
+
+.tg-bar {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: tg-eq ease-in-out infinite alternate;
+}
+
+@keyframes tg-eq {
+  0% {
+    transform: scaleY(0.15);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+.tg-woofer {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: tg-thump 0.48s ease-out infinite;
+}
+
+@keyframes tg-thump {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.12);
+  }
+}
+
+.tg-spark {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: hero-twinkle 1.8s ease-in-out infinite;
+}
+
+.tg-neon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 46%;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5.6vw, 4.6rem);
+  line-height: 1;
+  color: #fff;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 16px #ff2bd6,
+    0 0 34px #ff2bd6,
+    0 0 60px #ff2bd6;
+  rotate: -6deg;
+}
+
+.tg-neon span:last-child {
+  color: #eaffff;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 16px #2bf0ff,
+    0 0 34px #2bf0ff,
+    0 0 60px #2bf0ff;
+  animation: tg-flicker 4s steps(1) infinite;
+}
+
+@keyframes tg-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.35;
+  }
+  64% {
+    opacity: 1;
+  }
+  66% {
+    opacity: 0.5;
+  }
+  68% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 899.98px) {
+  .tg-neon {
+    font-size: clamp(1.8rem, 9vw, 3rem);
+  }
+}

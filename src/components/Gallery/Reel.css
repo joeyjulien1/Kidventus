@@ -1,0 +1,436 @@
+.reel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(72px, 10vh, 110px);
+}
+
+.reel__stage {
+  --frame: 26px;
+  --rim: 12px;
+  position: relative;
+  width: min(390px, 30vw, 50svh);
+  aspect-ratio: 4 / 5;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+/* ---------- Marquee frame ---------- */
+
+.reel__frame {
+  position: absolute;
+  inset: calc(var(--frame) * -1);
+  border-radius: 46px;
+  border: var(--rim) solid #ffc94a;
+  background:
+    radial-gradient(70% 60% at 50% 40%, rgba(90, 169, 224, 0.3), transparent 70%),
+    var(--blue-8);
+  box-shadow:
+    0 0 0 4px var(--kv-plum-deep),
+    inset 0 0 0 4px var(--kv-plum-deep),
+    0 34px 80px rgba(0, 0, 0, 0.5),
+    0 0 140px rgba(255, 201, 74, 0.22);
+}
+
+.reel__bulbs {
+  position: absolute;
+  inset: calc(var(--rim) / -2 - 2px);
+}
+
+.reel__bulb {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: #ff9a3c;
+  border: 2px solid var(--kv-plum-deep);
+}
+
+.reel__bulb::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: #fff6c9;
+  box-shadow: 0 0 12px 4px rgba(255, 214, 120, 0.85);
+  animation: reel-chase 1s steps(1) infinite;
+  animation-delay: inherit;
+}
+
+@keyframes reel-chase {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.reel__sign {
+  position: absolute;
+  z-index: 6;
+  top: calc(var(--frame) * -1 - 34px);
+  left: 50%;
+  translate: -50% 0;
+  rotate: 0deg;
+  padding: 9px 22px 11px;
+  border: 3px solid var(--kv-plum-deep);
+  border-radius: 14px;
+  background: var(--kv-star);
+  box-shadow: 0 5px 0 var(--kv-plum-deep);
+  color: var(--kv-plum-deep);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.reel__sign::before,
+.reel__sign::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: #fff6c9;
+  box-shadow: 0 0 8px 2px rgba(255, 214, 120, 0.9);
+}
+
+.reel__sign::before {
+  left: 8px;
+}
+
+.reel__sign::after {
+  right: 8px;
+}
+
+/* ---------- Cards ---------- */
+
+.reel__deal {
+  position: absolute;
+  inset: 0;
+}
+
+.reel__card {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 26px;
+  border: 5px solid #fff;
+  background: var(--blue-9);
+  box-shadow:
+    0 0 0 4px var(--kv-plum-deep),
+    0 22px 50px rgba(0, 0, 0, 0.45);
+}
+
+.reel__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: rgba(3, 15, 39, 0.5);
+  pointer-events: none;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.reel__card.is-active::after {
+  opacity: 0;
+}
+
+.reel__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reel__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(3, 15, 39, 0.55) 0%, transparent 22%),
+    linear-gradient(0deg, rgba(3, 15, 39, 0.6) 0%, transparent 30%);
+  pointer-events: none;
+}
+
+.reel__segs {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  gap: 5px;
+}
+
+.reel__seg {
+  flex: 1;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+}
+
+.reel__seg-fill {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transform: scaleX(var(--p, 0));
+  transform-origin: 0 50%;
+}
+
+.reel__tag {
+  position: absolute;
+  z-index: 3;
+  top: 26px;
+  left: 12px;
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  background: var(--kv-star);
+  color: var(--kv-plum-deep);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reel__sound {
+  position: absolute;
+  z-index: 3;
+  right: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px 0 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(3, 15, 39, 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  transition: background-color 0.3s;
+}
+
+.reel__sound svg {
+  width: 20px;
+  height: 20px;
+}
+
+.reel__sound:not(.is-on)::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 2px solid var(--kv-star);
+  animation: reel-ping 1.8s var(--ease-out) infinite;
+  pointer-events: none;
+}
+
+.reel__sound.is-on {
+  background: rgba(37, 211, 102, 0.85);
+}
+
+@keyframes reel-ping {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25, 1.5);
+  }
+}
+
+.reel__pick {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.reel__pick-icon {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--kv-plum-deep);
+  box-shadow: 0 0 0 4px var(--kv-plum-deep), 0 6px 0 4px var(--kv-plum-deep);
+  transition: transform 0.3s var(--ease-bounce);
+}
+
+.reel__pick-icon svg {
+  width: 26px;
+  height: 26px;
+  margin-left: 3px;
+}
+
+@media (hover: hover) {
+  .reel__pick:hover .reel__pick-icon {
+    transform: scale(1.12) rotate(-6deg);
+  }
+}
+
+/* ---------- Ticket stub ---------- */
+
+.reel__stub {
+  position: relative;
+  z-index: 5;
+  width: min(520px, 100%);
+  margin-top: calc(26px + 30px);
+  padding: 0 var(--gutter);
+}
+
+.reel__stub-inner {
+  position: relative;
+  padding: 18px 30px 20px;
+  border-radius: 18px;
+  background: var(--cream);
+  color: var(--ink);
+  text-align: center;
+  rotate: -1deg;
+  -webkit-mask:
+    radial-gradient(circle 13px at 0 50%, transparent 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 13px at 100% 50%, transparent 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 13px at 0 50%, transparent 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 13px at 100% 50%, transparent 97%, #000) right / 51% 100% no-repeat;
+  animation: reel-stub 0.6s var(--ease-out);
+}
+
+@keyframes reel-stub {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.reel__stub-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--blue-4);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.reel__count {
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--kv-star);
+  letter-spacing: 0.06em;
+}
+
+.reel__title {
+  margin-top: 6px;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  color: var(--kv-plum-deep);
+}
+
+.reel__blurb {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #4a3560;
+}
+
+/* ---------- Controls ---------- */
+
+.reel__controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.reel__ctrl {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  transition: transform 0.25s var(--ease-bounce), background-color 0.25s;
+}
+
+.reel__ctrl svg {
+  width: 22px;
+  height: 22px;
+}
+
+.reel__ctrl--main {
+  width: 62px;
+  height: 62px;
+  background: var(--kv-star);
+  border: 3px solid var(--kv-plum-deep);
+  box-shadow: 0 4px 0 var(--kv-plum-deep);
+  color: var(--kv-plum-deep);
+}
+
+@media (hover: hover) {
+  .reel__ctrl:hover {
+    transform: scale(1.08);
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .reel__ctrl--main:hover {
+    background: var(--kv-star);
+  }
+}
+
+@media (max-width: 899.98px) {
+  .reel__stage {
+    --frame: 16px;
+    --rim: 9px;
+    width: min(300px, 66vw, 52svh);
+  }
+
+  .reel__frame {
+    border-radius: 34px;
+  }
+
+  .reel__bulb {
+    width: 10px;
+    height: 10px;
+    margin: -5px 0 0 -5px;
+  }
+
+  .reel__card {
+    border-width: 4px;
+    border-radius: 20px;
+  }
+
+  .reel__sound span {
+    display: none;
+  }
+
+  .reel__sound {
+    padding: 0 12px;
+  }
+
+  .reel__sound:not(.is-on) span {
+    display: inline;
+    font-size: 0.78rem;
+  }
+}

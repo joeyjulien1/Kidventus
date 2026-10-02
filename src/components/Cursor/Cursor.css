@@ -1,0 +1,74 @@
+.cursor-ring,
+.cursor-sparks {
+  display: none;
+}
+
+html.has-cursor .cursor-ring {
+  position: fixed;
+  z-index: 95;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px var(--kv-plum),
+    inset 0 0 0 2px rgba(92, 36, 104, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.3s,
+    width 0.35s var(--ease-bounce),
+    height 0.35s var(--ease-bounce),
+    margin 0.35s var(--ease-bounce),
+    background-color 0.3s;
+}
+
+html.has-cursor .cursor-ring.is-on {
+  opacity: 0.9;
+}
+
+html.has-cursor .cursor-ring.is-hover {
+  width: 62px;
+  height: 62px;
+  margin: -31px 0 0 -31px;
+  background: rgba(252, 216, 113, 0.22);
+}
+
+html.has-cursor .cursor-ring.is-down {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+}
+
+html.has-cursor .cursor-sparks {
+  position: fixed;
+  z-index: 94;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.cursor-spark {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  -webkit-mask: var(--sparkle-mask) center / contain no-repeat;
+  mask: var(--sparkle-mask) center / contain no-repeat;
+  animation: cursor-spark 0.8s ease-out forwards;
+}
+
+@keyframes cursor-spark {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--dx), 34px) scale(0.2) rotate(120deg);
+  }
+}
