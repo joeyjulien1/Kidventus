@@ -295,9 +295,12 @@ export function Reel() {
                   playsInline
                   preload={i === 0 ? 'metadata' : 'none'}
                   onEnded={() => goTo(active + 1, true)}
+                  onPlaying={(e) => e.currentTarget.parentElement?.classList.add('has-frames')}
                   aria-label={`${r.title} — ${r.blurb}`}
                   tabIndex={-1}
                 />
+                {/* keeps the thumbnail up until real frames arrive (no black card while buffering) */}
+                <img className="reel__poster" src={r.poster} alt="" aria-hidden="true" loading={i < 3 ? 'eager' : 'lazy'} decoding="async" />
                 <span className="reel__shade" aria-hidden="true" />
 
                 {isActive && (
