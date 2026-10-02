@@ -1,7 +1,12 @@
+/* ---------- Shared artwork scaffolding (all five scenes) ---------- */
+
 .art {
   position: relative;
   width: 100%;
   height: 100%;
+  container-type: inline-size;
+  /* one unit of the 600 × 600 artwork space */
+  --u: calc(100cqw / 600);
 }
 
 .art__svg {
@@ -12,43 +17,48 @@
   overflow: visible;
 }
 
+.art__layer {
+  position: absolute;
+  display: block;
+  max-width: none;
+  overflow: visible;
+}
+
+/* A sparkle drawn in HTML so its twinkle runs on the GPU */
+.art-spark {
+  position: absolute;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: #fff;
+  -webkit-mask: var(--sparkle-mask) center / contain no-repeat;
+  mask: var(--sparkle-mask) center / contain no-repeat;
+  animation: hero-twinkle 2.4s ease-in-out infinite;
+}
+
 /* ---------- Birthday ---------- */
 
 .ba-bunting {
-  transform-box: view-box;
-  transform-origin: 300px 0;
+  transform-origin: 50% 0%;
   animation: ba-swing 5s ease-in-out infinite;
-}
-
-.ba-flag {
-  transform-box: fill-box;
-  transform-origin: 50% 0;
-  animation: ba-flag 2.4s ease-in-out infinite;
 }
 
 @keyframes ba-swing {
   0%,
   100% {
-    transform: rotate(-1.2deg);
+    transform: rotate(-1.4deg);
   }
   50% {
-    transform: rotate(1.2deg);
+    transform: rotate(1.4deg);
   }
 }
 
-@keyframes ba-flag {
-  0%,
-  100% {
-    transform: rotate(-6deg);
-  }
-  50% {
-    transform: rotate(6deg);
-  }
+.ba-cake-wrap {
+  position: absolute;
+  inset: 0;
 }
 
 .ba-flame {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
+  transform-origin: 50% 92%;
   animation: ba-flicker 0.9s ease-in-out infinite alternate;
 }
 
@@ -68,9 +78,22 @@
 }
 
 .ba-confetti {
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
+  position: absolute;
+  width: calc(var(--u) * 18);
+  height: calc(var(--u) * 10);
+  margin: calc(var(--u) * -5) 0 0 calc(var(--u) * -9);
+  border: calc(var(--u) * 2.5) solid var(--kv-plum-deep);
+  border-radius: calc(var(--u) * 2);
+  background: var(--c);
+  rotate: var(--r);
   animation: ba-confetti 3.6s ease-in-out infinite;
+}
+
+.ba-confetti--round {
+  width: calc(var(--u) * 14);
+  height: calc(var(--u) * 14);
+  margin: calc(var(--u) * -7) 0 0 calc(var(--u) * -7);
+  border-radius: 50%;
 }
 
 @keyframes ba-confetti {
@@ -79,31 +102,7 @@
     transform: translateY(0) rotate(0deg);
   }
   50% {
-    transform: translateY(-12px) rotate(30deg);
-  }
-}
-
-.ba-gift {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: ba-gift 3s ease-in-out infinite;
-}
-
-.ba-gift--r {
-  animation-delay: -1.5s;
-}
-
-@keyframes ba-gift {
-  0%,
-  86%,
-  100% {
-    transform: scale(1, 1);
-  }
-  90% {
-    transform: scale(1.06, 0.92);
-  }
-  95% {
-    transform: scale(0.96, 1.06);
+    transform: translateY(calc(var(--u) * -12)) rotate(30deg);
   }
 }
 

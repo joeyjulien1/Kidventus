@@ -75,3 +75,18 @@
   --navy-ink: #0a1f44;
   --blue-dots: radial-gradient(circle, rgba(255, 255, 255, 0.14) 0 1.6px, transparent 2.2px) 0 0 / 30px 30px;
 }
+
+:root {
+  /* Full-screen scroll stages. Phones grow/shrink the viewport as the browser bars hide and show:
+     stages cover the large viewport (no strip of the next section peeking in) while UI stays
+     clear of the bars using --ui-safe. */
+  --stage-h: 100vh;
+  --ui-safe: 0px;
+}
+
+@supports (height: 100lvh) {
+  :root {
+    --stage-h: 100lvh;
+    --ui-safe: calc(100lvh - 100svh);
+  }
+}

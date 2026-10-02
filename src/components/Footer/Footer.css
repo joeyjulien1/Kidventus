@@ -8,7 +8,7 @@
 
 .footer__scallop {
   height: 34px;
-  background: radial-gradient(circle at 50% 0, var(--blue-8) 0 22px, var(--blue-9) 22.6px) 0 0 / 46px 34px repeat-x;
+  background: radial-gradient(circle at 50% 0, var(--blue-7) 0 22px, var(--blue-9) 22.6px) 0 0 / 46px 34px repeat-x;
 }
 
 .footer__grid {

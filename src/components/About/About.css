@@ -9,7 +9,7 @@
    yellow, the hero hands over to this (identical) yellow world with zero gap. */
 @media (prefers-reduced-motion: no-preference) {
   .manifesto {
-    margin-top: -100svh;
+    margin-top: calc(var(--stage-h) * -1);
     /* nav jumps land where the sentence is already lit */
     scroll-margin-top: -85svh;
   }
@@ -37,9 +37,9 @@
   .manifesto__sticky {
     position: sticky;
     top: 0;
-    height: 100svh;
+    height: var(--stage-h);
     min-height: 560px;
-    padding-bottom: 24px;
+    padding-bottom: calc(24px + var(--ui-safe));
     overflow: hidden;
     gap: clamp(26px, 5.5vh, 56px);
   }
@@ -222,10 +222,10 @@
 }
 
 .about__story p {
-  max-width: 32em;
-  margin-top: 20px;
+  max-width: 34em;
+  margin-top: 16px;
   color: #3a1d4f;
-  font-size: clamp(1.02rem, 1.2vw, 1.15rem);
+  font-size: clamp(0.92rem, 1vw, 1.02rem);
   font-weight: 600;
   line-height: 1.6;
 }
@@ -236,13 +236,14 @@
 }
 
 .about__founder {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   align-items: center;
-  gap: 14px;
-  margin-top: 28px;
-  padding: 8px 22px 8px 8px;
+  gap: 12px;
+  margin: 26px auto 0;
+  padding: 9px 18px 9px 9px;
   border: var(--sticker-stroke) solid var(--kv-plum-deep);
-  border-radius: var(--radius-pill);
+  border-radius: 14px;
   background: #fff;
   box-shadow: 0 5px 0 var(--kv-plum-deep);
   color: var(--ink);
@@ -252,20 +253,24 @@
 
 @media (hover: hover) {
   .about__founder:hover {
-    transform: translateY(-3px) rotate(-1deg);
+    transform: translateY(-3px);
     box-shadow: 0 8px 0 var(--kv-plum-deep);
   }
 }
 
 .about__badge {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  padding: 2px;
+  border-radius: 10px;
+  background: #fff;
+  object-fit: contain;
   box-shadow: 0 0 0 2px var(--kv-plum-deep);
 }
 
 .about__founder strong {
   display: block;
+  font-size: 0.9rem;
   font-weight: 900;
 }
 
@@ -274,7 +279,7 @@
   align-items: center;
   gap: 6px;
   color: var(--kv-plum);
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 800;
 }
 

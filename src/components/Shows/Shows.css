@@ -64,7 +64,7 @@
   align-items: center;
   gap: clamp(16px, 3vw, 56px);
   min-height: 100svh;
-  padding: calc(var(--nav-h) + 64px) var(--gutter) 120px;
+  padding: calc(var(--nav-h) + 64px) var(--gutter) calc(120px + var(--ui-safe));
   background: var(--scene-bg);
   color: var(--scene-ink);
   overflow: hidden;
@@ -257,7 +257,7 @@
   .shows__sticky {
     position: sticky;
     top: 0;
-    height: 100svh;
+    height: var(--stage-h);
     min-height: 560px;
     overflow: hidden;
   }
@@ -267,11 +267,21 @@
     inset: 0;
   }
 
+  /* Only scenes that are actually on screen are painted; those get their own GPU layer so the
+     clip-path reveals never repaint the artwork underneath. */
   .scene {
     position: absolute;
     inset: 0;
     min-height: 0;
-    will-change: clip-path;
+    visibility: hidden;
+    /* the browser skips styling, layout and painting of scenes that are off stage */
+    content-visibility: hidden;
+  }
+
+  .scene.is-live {
+    visibility: visible;
+    content-visibility: visible;
+    will-change: transform;
   }
 
   .shows__hud {
@@ -287,24 +297,20 @@
   .shows__hud > * {
     padding: 8px 14px;
     border-radius: var(--radius-pill);
-    background: rgba(3, 15, 39, 0.42);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background: rgba(3, 15, 39, 0.55);
   }
 
   .shows__rail {
     position: absolute;
     z-index: 10;
     left: 50%;
-    bottom: calc(18px + var(--safe-bottom));
+    bottom: calc(18px + var(--safe-bottom) + var(--ui-safe));
     display: block;
     translate: -50% 0;
     padding: 6px;
     border-radius: var(--radius-pill);
-    background: rgba(3, 15, 39, 0.5);
+    background: rgba(3, 15, 39, 0.78);
     border: 1.5px solid rgba(255, 255, 255, 0.14);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
   }
 
   .shows__rail ol {
@@ -372,7 +378,7 @@
     height: 100%;
     border-radius: inherit;
     background: var(--blue-3);
-    transform: scaleX(var(--seg, 0));
+    transform: scaleX(0);
     transform-origin: 0 50%;
   }
 
@@ -392,7 +398,7 @@
     grid-template-rows: minmax(0, 1fr) auto;
     align-items: stretch;
     gap: 6px;
-    padding: calc(var(--nav-h) + 50px) 18px 96px;
+    padding: calc(var(--nav-h) + 50px) 18px calc(96px + var(--ui-safe));
   }
 
   .scene__art {

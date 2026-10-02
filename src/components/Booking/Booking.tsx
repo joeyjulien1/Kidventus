@@ -4,9 +4,9 @@ import { fromToEach } from '../../lib/anim';
 import { burstFrom } from '../../lib/confetti';
 import { onShowBookingRequest } from '../../lib/navigation';
 import { buildMessage, cleanText, waLink } from '../../lib/whatsapp';
-import { PHONES } from '../../config/site';
+import { PHONES, SITE } from '../../config/site';
 import { SHOWS, type ShowId } from '../../config/shows';
-import { CalendarIcon, CheckIcon, LockIcon, PinIcon, ShowGlyph, SparkleIcon, WhatsAppIcon } from '../icons';
+import { CalendarIcon, CheckIcon, InstagramIcon, LockIcon, PinIcon, ShowGlyph, SparkleIcon, WhatsAppIcon } from '../icons';
 import './Booking.css';
 
 type Choice = ShowId | 'unsure';
@@ -142,11 +142,11 @@ export function Booking() {
   const celebrate = (e: MouseEvent<HTMLElement>) => burstFrom(e.currentTarget, { count: 60, spread: 90, power: 13 });
 
   return (
-    <section id="booking" ref={root} className="booking" aria-labelledby="booking-title" data-theme="booking">
+    <section id="contact" ref={root} className="booking" aria-labelledby="contact-title">
       <div className="wrap">
         <header className="booking__head">
-          <p className="kicker booking__kicker">How to book</p>
-          <h2 className="booking__title display" id="booking-title">
+          <p className="kicker booking__kicker">Contact · How to book</p>
+          <h2 className="booking__title display" id="contact-title">
             <span className="line">
               <span className="line__in">Booking is as easy as</span>
             </span>
@@ -301,6 +301,7 @@ export function Booking() {
             </p>
           </form>
 
+          <div className="builder__aside">
           <figure className="phone" aria-label="Preview of your WhatsApp message">
             <div className="phone__screen">
               <div className="phone__bar">
@@ -329,6 +330,24 @@ export function Booking() {
             </div>
             <figcaption className="sr-only">This is exactly the message that will open in WhatsApp.</figcaption>
           </figure>
+
+          <div className="builder__social">
+            <a href={SITE.instagram.brand.url} target="_blank" rel="noopener noreferrer">
+              <InstagramIcon />
+              <span>
+                <strong>{SITE.instagram.brand.handle}</strong> on Instagram
+              </span>
+              <span className="sr-only">(opens in a new tab)</span>
+            </a>
+            <a href={SITE.instagram.owner.url} target="_blank" rel="noopener noreferrer">
+              <InstagramIcon />
+              <span>
+                <strong>{SITE.instagram.owner.handle}</strong> · founder Carl Mansour
+              </span>
+              <span className="sr-only">(opens in a new tab)</span>
+            </a>
+          </div>
+          </div>
         </div>
       </div>
     </section>

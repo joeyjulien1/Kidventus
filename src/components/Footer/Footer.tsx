@@ -6,7 +6,7 @@ import { Logo } from '../Logo/Logo';
 import { ArrowDownIcon, InstagramIcon, WhatsAppIcon } from '../icons';
 import './Footer.css';
 
-const LINKS = [...NAV_LINKS.slice(0, 4), { id: 'booking', label: 'How to Book' }, NAV_LINKS[4]];
+const LINKS = NAV_LINKS;
 
 export function Footer() {
   const go = (id: string) => (e: MouseEvent) => {

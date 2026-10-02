@@ -1,6 +1,7 @@
 import { Fragment, useRef } from 'react';
 import { gsap, useGSAP, MQ } from '../../lib/gsap';
 import { goToSection } from '../../lib/navigation';
+import { primeTimeline } from '../../lib/anim';
 import { usePauseOffscreen } from '../../lib/usePauseOffscreen';
 import { SHOWS } from '../../config/shows';
 import { SITE } from '../../config/site';
@@ -137,6 +138,7 @@ export function About() {
         });
         tl.fromTo(q('.manifesto__outro'), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.15 }, 1.2)
           .to({}, { duration: 0.12 });
+        return primeTimeline(tl);
       });
 
       /* ---------- Details: reveal rows, slide the marquee with scroll ---------- */

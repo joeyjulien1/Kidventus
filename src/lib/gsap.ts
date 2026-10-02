@@ -1,10 +1,9 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, DrawSVGPlugin, useGSAP);
+gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin, useGSAP);
 
 ScrollTrigger.config({ ignoreMobileResize: true });
 gsap.defaults({ ease: 'power3.out' });

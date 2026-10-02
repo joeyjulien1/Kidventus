@@ -1,10 +1,28 @@
+/* Floor lines fade out toward the edges (static mask, painted once) */
+.tg-floor {
+  overflow: hidden;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 70%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(70% 60% at 50% 70%, #000 55%, transparent 100%);
+}
+
+/* ---------- Beams ---------- */
+
 .tg-beams {
-  mix-blend-mode: screen;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 .tg-beam {
-  transform-box: view-box;
-  transform-origin: 300px 150px;
+  position: absolute;
+  left: calc(50% - var(--u) * 50);
+  top: 25%;
+  width: calc(var(--u) * 100);
+  height: calc(var(--u) * 490);
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  background: linear-gradient(180deg, var(--c), transparent 92%);
+  opacity: 0.32;
+  transform-origin: 50% 0;
   animation: tg-sweep 4.2s ease-in-out infinite alternate;
 }
 
@@ -17,34 +35,13 @@
   }
 }
 
-.tg-facets {
-  animation: tg-spin 1.6s linear infinite;
-}
-
-@keyframes tg-spin {
-  to {
-    transform: translateX(15px);
-  }
-}
-
-.tg-bar {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: tg-eq ease-in-out infinite alternate;
-}
-
-@keyframes tg-eq {
-  0% {
-    transform: scaleY(0.15);
-  }
-  100% {
-    transform: scaleY(1);
-  }
-}
+/* ---------- Speakers & equalizer ---------- */
 
 .tg-woofer {
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
+  position: absolute;
+  border: calc(var(--u) * 4) solid #2bf0ff;
+  border-radius: 50%;
+  background: radial-gradient(circle, #2bf0ff 0 15%, #2c1a4f 16%);
   animation: tg-thump 0.48s ease-out infinite;
 }
 
@@ -58,11 +55,103 @@
   }
 }
 
-.tg-spark {
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-  animation: hero-twinkle 1.8s ease-in-out infinite;
+.tg-eq {
+  position: absolute;
+  left: 21.333%;
+  width: 56.167%;
+  bottom: 6.667%;
+  height: 20%;
+  display: flex;
+  align-items: flex-end;
+  gap: calc(var(--u) * 13);
 }
+
+.tg-bar {
+  flex: 1;
+  height: 100%;
+  border-radius: calc(var(--u) * 6);
+  background: linear-gradient(0deg, #ff2bd6, #2bf0ff);
+  transform-origin: 50% 100%;
+  animation: tg-eq ease-in-out infinite alternate;
+}
+
+@keyframes tg-eq {
+  0% {
+    transform: scaleY(0.15);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+/* ---------- Disco ball ---------- */
+
+.tg-ball {
+  position: absolute;
+}
+
+.tg-ball::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: calc(var(--u) * 4);
+  height: 220%;
+  translate: -50% 0;
+  background: #c9b6ff;
+}
+
+.tg-ball__clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: calc(var(--u) * 6) solid var(--kv-plum-deep);
+  border-radius: 50%;
+  background: #9b7be8;
+}
+
+/* Mirror tiles: a grid over a colorful wash, twice as wide as the ball, sliding sideways forever */
+.tg-facets {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background:
+    repeating-linear-gradient(90deg, rgba(44, 26, 79, 0.55) 0 0.35%, transparent 0.35% 4.1667%),
+    repeating-linear-gradient(0deg, rgba(44, 26, 79, 0.55) 0 0.7%, transparent 0.7% 8.333%),
+    conic-gradient(from 30deg at 50% 50%, #efe6ff, #c9b6ff, #ff9ad5, #ffffff, #7fe8ff, #b39bf0, #efe6ff) 0 0 / 50% 100% repeat-x;
+  animation: tg-spin 5s linear infinite;
+}
+
+@keyframes tg-spin {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.tg-ball__clip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 36% 30%, rgba(255, 255, 255, 0.35) 0 16%, transparent 38%),
+    radial-gradient(circle at 50% 50%, transparent 52%, rgba(44, 26, 79, 0.55) 100%);
+}
+
+.tg-ball__shine {
+  position: absolute;
+  left: 22%;
+  top: 18%;
+  width: 26%;
+  height: 15%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  rotate: -30deg;
+}
+
+/* ---------- Neon sign ---------- */
 
 .tg-neon {
   position: absolute;
@@ -71,7 +160,7 @@
   top: 46%;
   text-align: center;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5.6vw, 4.6rem);
+  font-size: calc(var(--u) * 70);
   line-height: 1;
   color: #fff;
   letter-spacing: 0.02em;
@@ -82,6 +171,10 @@
     0 0 34px #ff2bd6,
     0 0 60px #ff2bd6;
   rotate: -6deg;
+}
+
+.tg-neon span {
+  display: inline-block;
 }
 
 .tg-neon span:last-child {
@@ -110,11 +203,5 @@
   }
   68% {
     opacity: 1;
-  }
-}
-
-@media (max-width: 899.98px) {
-  .tg-neon {
-    font-size: clamp(1.8rem, 9vw, 3rem);
   }
 }

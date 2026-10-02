@@ -4,7 +4,7 @@ import { WhatsAppIcon } from '../icons';
 import './MobileCTA.css';
 
 /** Zones that already have their own booking buttons (or a bottom rail) */
-const BUSY = ['home', 'shows', 'booking', 'contact'];
+const BUSY = ['home', 'shows', 'contact'];
 
 export function MobileCTA() {
   const [visible, setVisible] = useState(false);

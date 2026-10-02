@@ -1,6 +1,6 @@
 import { useRef, useState, type ComponentType } from 'react';
 import { gsap, ScrollTrigger, useGSAP, MQ } from '../../lib/gsap';
-import { fromToEach } from '../../lib/anim';
+import { fromToEach, primeTimeline } from '../../lib/anim';
 import { scrollToTarget, requestShowBooking } from '../../lib/navigation';
 import { showLink } from '../../lib/whatsapp';
 import { SHOWS, type ShowId } from '../../config/shows';
@@ -31,21 +31,41 @@ const N = SHOWS.length;
 const transitionAt = (i: number) => LEAD + HOLD + (i - 1) * (TRANS + HOLD);
 const settledAt = (i: number) => (i === 0 ? 0 : transitionAt(i) + TRANS);
 const TOTAL = transitionAt(N - 1) + TRANS + HOLD + TAIL;
+const ALL_SCENES = (1 << N) - 1;
+/** Small overlap so a scene is already visible a hair before it starts to show (both directions). */
+const EDGE = 0.08;
+
+/** Which scenes are on screen at timeline time `t` (bit mask) and which one is "current". */
+function stageAt(t: number) {
+  let active = 0;
+  for (let i = 1; i < N; i++) if (t >= transitionAt(i) + TRANS * 0.5) active = i;
+  let live = 0;
+  for (let i = 0; i < N; i++) {
+    const from = i === 0 ? -Infinity : transitionAt(i) - EDGE; // starts being revealed
+    const until = i === N - 1 ? Infinity : settledAt(i + 1) + EDGE; // fully covered by the next one
+    if (t >= from && t <= until) live |= 1 << i;
+  }
+  return { active, live };
+}
 
 export function Shows() {
   const root = useRef<HTMLElement>(null);
   const railRef = useRef<HTMLElement>(null);
   const stRef = useRef<ScrollTrigger | null>(null);
   const [active, setActive] = useState(0);
+  const [liveMask, setLiveMask] = useState(ALL_SCENES);
   const [staged, setStaged] = useState(false);
   const activeRef = useRef(0);
+  const liveRef = useRef(ALL_SCENES);
 
   useGSAP(
     () => {
       const q = gsap.utils.selector(root);
       const mm = gsap.matchMedia();
 
-      mm.add(MQ.motion, () => {
+      mm.add({ motion: MQ.motion, mobile: MQ.mobile }, (ctx) => {
+        if (!ctx.conditions?.motion) return;
+        const mobile = !!ctx.conditions.mobile;
         setStaged(true);
         const track = q('.shows__track')[0] as HTMLElement;
         const scenes = q('.scene') as HTMLElement[];
@@ -64,8 +84,20 @@ export function Shows() {
 
           tl.fromTo(scene, { clipPath: show.reveal.from }, { clipPath: show.reveal.to, duration: TRANS, ease: 'power2.inOut' }, at)
             .fromTo(part(scene, '.scene__art-inner'), { scale: 1.3, rotation: i % 2 ? 4 : -4 }, { scale: 1, rotation: 0, duration: TRANS * 1.1, ease: 'power2.out' }, at)
-            .to(part(prev, '.scene__panel'), { y: -70, autoAlpha: 0, duration: TRANS * 0.5, ease: 'power1.in' }, at)
-            .to(part(prev, '.scene__art-inner'), { scale: 0.82, autoAlpha: 0.4, duration: TRANS, ease: 'power1.in' }, at);
+            // Plain opacity (not autoAlpha): GSAP records the "before" state when a tween first runs,
+            // and a scene that is still hidden would be recorded (and later restored) as invisible.
+            .fromTo(
+              part(prev, '.scene__panel'),
+              { y: 0, opacity: 1 },
+              { y: -70, opacity: 0, duration: TRANS * 0.5, ease: 'power1.in', immediateRender: false },
+              at,
+            )
+            .fromTo(
+              part(prev, '.scene__art-inner'),
+              { scale: 1, rotation: 0, opacity: 1 },
+              { scale: 0.82, opacity: 0.4, duration: TRANS, ease: 'power1.in', immediateRender: false },
+              at,
+            );
 
           fromToEach(tl, part(scene, '.scene__title .line__in'), { yPercent: 115 }, { yPercent: 0, duration: TRANS * 0.45, ease: 'power3.out' }, at + TRANS * 0.42, 0.06);
           fromToEach(
@@ -81,40 +113,73 @@ export function Shows() {
         }
         tl.to({}, { duration: TAIL }, TOTAL - TAIL);
 
+        // Everything (current scene, which scenes are painted, rail progress) follows the time the
+        // timeline has actually rendered, so what is visible always matches the animation.
+        const fills = q('.rail__fill') as HTMLElement[];
+        const sync = () => {
+          const time = tl.time();
+          const { active: a, live } = stageAt(time);
+          if (a !== activeRef.current) {
+            activeRef.current = a;
+            setActive(a);
+          }
+          if (live !== liveRef.current) {
+            liveRef.current = live;
+            setLiveMask(live);
+          }
+          const start = a === 0 ? 0 : transitionAt(a) + TRANS * 0.5;
+          const end = a === N - 1 ? TOTAL : transitionAt(a + 1) + TRANS * 0.5;
+          // transform on the one bar that is showing (a CSS variable on the rail would restyle every tab)
+          const fill = fills[a];
+          if (fill) fill.style.transform = `scaleX(${gsap.utils.clamp(0, 1, (time - start) / (end - start)).toFixed(3)})`;
+        };
+        tl.eventCallback('onUpdate', sync);
+
         const st = ScrollTrigger.create({
           trigger: track,
           start: 'top top',
           end: 'bottom bottom',
           animation: tl,
-          scrub: 0.7,
-          onUpdate: (self) => {
-            const time = self.progress * TOTAL;
-            let a = 0;
-            for (let i = 1; i < N; i++) if (time >= transitionAt(i) + TRANS * 0.5) a = i;
-            if (a !== activeRef.current) {
-              activeRef.current = a;
-              setActive(a);
-            }
-            const start = a === 0 ? 0 : transitionAt(a) + TRANS * 0.5;
-            const end = a === N - 1 ? TOTAL : transitionAt(a + 1) + TRANS * 0.5;
-            railRef.current?.style.setProperty('--seg', gsap.utils.clamp(0, 1, (time - start) / (end - start)).toFixed(3));
-          },
+          // light smoothing: responsive to the finger/wheel without drifting after you stop
+          scrub: mobile ? 0.25 : 0.4,
         });
         stRef.current = st;
+        sync();
+        // After load: initialise every tween, and lay out + draw every scene once while they are
+        // still masked off-screen, so the first scroll through the shows has no first-time work.
+        let warm = 0;
+        const unprime = primeTimeline(tl, () => {
+          liveRef.current = ALL_SCENES;
+          setLiveMask(ALL_SCENES);
+          warm = requestAnimationFrame(() => {
+            warm = requestAnimationFrame(() => {
+              liveRef.current = -1;
+              sync();
+            });
+          });
+        });
 
         // First scene arrives as the section scrolls into view
         const enter = gsap.timeline({
           defaults: { ease: 'none' },
-          scrollTrigger: { trigger: root.current, start: 'top 85%', end: 'top 5%', scrub: 0.6 },
+          scrollTrigger: { trigger: root.current, start: 'top 85%', end: 'top 5%', scrub: mobile ? 0.25 : 0.4 },
         });
         enter.fromTo(part(scenes[0], '.scene__art-inner'), { yPercent: 18, scale: 0.85 }, { yPercent: 0, scale: 1, duration: 1 }, 0);
         fromToEach(enter, part(scenes[0], '.scene__title .line__in'), { yPercent: 115 }, { yPercent: 0, duration: 0.45 }, 0.25, 0.08);
         fromToEach(enter, part(scenes[0], '.scene__reveal'), { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35 }, 0.4, 0.06);
         fromToEach(enter, q('.shows__hud, .shows__rail'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.6);
+        const unprimeEnter = primeTimeline(enter);
 
         return () => {
+          unprime();
+          unprimeEnter();
+          cancelAnimationFrame(warm);
           setStaged(false);
           stRef.current = null;
+          activeRef.current = 0;
+          liveRef.current = ALL_SCENES;
+          setActive(0);
+          setLiveMask(ALL_SCENES);
         };
       });
 
@@ -155,7 +220,7 @@ export function Shows() {
               const { Art } = ART[show.id];
               const media = MEDIA.shows[show.id];
               const isActive = !staged || i === active;
-              const isLive = !staged || Math.abs(i - active) <= 1;
+              const isLive = !staged || ((liveMask >> i) & 1) === 1;
               return (
                 <article
                   key={show.id}

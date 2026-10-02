@@ -38,8 +38,12 @@ export const BubbleArt = memo(function BubbleArt() {
   return (
     <div className="art art--bubble">
       <div className="bub__giant">
-        <span className="bub__film" />
-        <img className="bub__star" src="/brand/kidventus-star-1.svg" alt="" draggable={false} loading="lazy" />
+        <div className="bub__jelly">
+          <span className="bub__film">
+            <span className="bub__film-spin" />
+          </span>
+          <img className="bub__star" src="/brand/kidventus-star-1.svg" alt="" draggable={false} loading="eager" />
+        </div>
       </div>
 
       <svg className="bub__wand" viewBox="0 0 200 280" aria-hidden="true" focusable="false">

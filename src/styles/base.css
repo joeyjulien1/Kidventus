@@ -343,7 +343,9 @@ ol[role='list'] {
 /* ---------- Pause decorative loops while off-screen ---------- */
 
 .is-offscreen,
-.is-offscreen * {
+.is-offscreen *,
+.is-offscreen *::before,
+.is-offscreen *::after {
   animation-play-state: paused !important;
 }
 

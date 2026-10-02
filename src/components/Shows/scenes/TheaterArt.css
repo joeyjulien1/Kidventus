@@ -1,7 +1,12 @@
 .ta-star__bob {
-  transform-box: fill-box;
   transform-origin: 50% 100%;
   animation: ta-bob 1.6s var(--ease-out) infinite;
+}
+
+.ta-star__bob img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 @keyframes ta-bob {
@@ -13,46 +18,62 @@
     transform: translateY(0) scale(1.08, 0.92);
   }
   50% {
-    transform: translateY(-34px) scale(0.96, 1.04) rotate(8deg);
+    transform: translateY(-22%) scale(0.96, 1.04) rotate(8deg);
   }
   85% {
     transform: translateY(0) scale(1.04, 0.96);
   }
 }
 
-.ta-beam {
-  transform-box: fill-box;
-  transform-origin: 50% 0%;
-}
-
+/* Marquee bulbs: an orange bulb with a warm glow that blinks on and off */
 .ta-bulb {
-  animation: ta-bulb 1.2s steps(1) infinite;
+  position: absolute;
+  width: calc(var(--u) * 15);
+  height: calc(var(--u) * 15);
+  translate: -50% -50%;
+  border: calc(var(--u) * 2.5) solid var(--kv-plum-deep);
+  border-radius: 50%;
+  background: #ff9a3c;
 }
 
-.ta-bulb--alt {
-  animation-delay: -0.6s;
+.ta-bulb::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  background: #fff6c9;
+  box-shadow: 0 0 calc(var(--u) * 10) calc(var(--u) * 3) rgba(255, 214, 120, 0.8);
+  animation: ta-bulb 1.2s steps(1) infinite;
+  animation-delay: inherit;
 }
 
 @keyframes ta-bulb {
   0%,
-  100% {
-    fill: #fff6c9;
+  49% {
+    opacity: 1;
   }
-  50% {
-    fill: #ff8a2b;
+  50%,
+  100% {
+    opacity: 0;
   }
 }
 
 .ta-foot {
+  position: absolute;
+  width: calc(var(--u) * 46);
+  height: calc(var(--u) * 24);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 246, 201, 0.75), rgba(255, 246, 201, 0));
   animation: ta-foot 2.4s ease-in-out infinite;
 }
 
 @keyframes ta-foot {
   0%,
   100% {
-    opacity: 0.25;
+    opacity: 0.35;
   }
   50% {
-    opacity: 0.6;
+    opacity: 0.85;
   }
 }

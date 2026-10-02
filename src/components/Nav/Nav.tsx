@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEv
 import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from '../../lib/gsap';
 import { NAV_LINKS, PHONES, SITE, type NavId } from '../../config/site';
 import { waLink } from '../../lib/whatsapp';
-import { goToSection } from '../../lib/navigation';
+import { focusSection, goToSection, isAutoScrolling, jumpTo } from '../../lib/navigation';
 import { Logo } from '../Logo/Logo';
 import { CloseIcon, InstagramIcon, WhatsAppIcon } from '../icons';
 import './Nav.css';
@@ -21,52 +21,61 @@ export function Nav() {
 
   /* ---------- Scroll state: compact bar, hide on scroll down, progress, active section ---------- */
   useGSAP(() => {
+    // Active section = the last one whose top has reached its line on screen. About Us starts
+    // underneath the hero, so it only counts once the star portal has filled the screen.
+    const ORDER: { id: string; nav: NavId; line: number }[] = [
+      { id: 'home', nav: 'home', line: 1 },
+      { id: 'about', nav: 'about', line: 0.02 },
+      { id: 'shows', nav: 'shows', line: 0.4 },
+      { id: 'gallery', nav: 'gallery', line: 0.4 },
+      { id: 'contact', nav: 'contact', line: 0.4 },
+    ];
+    // Section positions are measured only when layout changes (ScrollTrigger refresh), never per frame
+    let marks: { nav: NavId; y: number }[] = [];
+    const measure = () => {
+      marks = ORDER.map((sec) => {
+        const el = document.getElementById(sec.id);
+        return { nav: sec.nav, y: el ? el.getBoundingClientRect().top + window.scrollY - window.innerHeight * sec.line : Infinity };
+      });
+    };
+    measure();
+    ScrollTrigger.addEventListener('refresh', measure);
+
+    // Remember what we last told React, so a scroll frame only re-renders when something changed
     let lastY = window.scrollY;
+    let isScrolled = false;
+    let isHidden = false;
+    let current: NavId = 'home';
     const st = ScrollTrigger.create({
       start: 0,
       end: 'max',
       onUpdate: (self) => {
         const y = self.scroll();
-        setScrolled(y > 40);
+        if (y > 40 !== isScrolled) {
+          isScrolled = y > 40;
+          setScrolled(isScrolled);
+        }
         if (Math.abs(y - lastY) > 6) {
-          setHidden(y > window.innerHeight * 0.7 && self.direction === 1);
+          // keep the bar visible when a link moved the page (menu, logo, "Back to top")
+          const hide = !isAutoScrolling() && y > window.innerHeight * 0.7 && self.direction === 1;
+          if (hide !== isHidden) {
+            isHidden = hide;
+            setHidden(hide);
+          }
           lastY = y;
         }
-        progressRef.current?.style.setProperty('--p', self.progress.toFixed(4));
+        if (progressRef.current) progressRef.current.style.transform = `scaleX(${self.progress.toFixed(4)})`;
+        let next: NavId = 'home';
+        for (const m of marks) if (y >= m.y) next = m.nav;
+        if (next !== current) {
+          current = next;
+          setActive(next);
+        }
       },
     });
-
-    // Active section: the last one whose top has reached its line on screen.
-    // About Us starts underneath the hero, so it only counts once the star portal has filled the screen.
-    const ORDER: { id: string; nav: NavId | null; line: number }[] = [
-      { id: 'home', nav: 'home', line: 1 },
-      { id: 'about', nav: 'about', line: 0.02 },
-      { id: 'shows', nav: 'shows', line: 0.4 },
-      { id: 'gallery', nav: 'gallery', line: 0.4 },
-      { id: 'booking', nav: null, line: 0.4 },
-      { id: 'contact', nav: 'contact', line: 0.4 },
-    ];
-    let frame = 0;
-    const updateActive = () => {
-      frame = 0;
-      let current: NavId | null = 'home';
-      for (const sec of ORDER) {
-        const el = document.getElementById(sec.id);
-        if (el && el.getBoundingClientRect().top <= window.innerHeight * sec.line) current = sec.nav;
-      }
-      setActive(current);
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(updateActive);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    updateActive();
     return () => {
       st.kill();
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      ScrollTrigger.removeEventListener('refresh', measure);
     };
   }, []);
 
@@ -123,6 +132,8 @@ export function Nav() {
         }
         menu.querySelector<HTMLElement>('.menu__link')?.focus({ preventScroll: true });
       } else if (menu.style.visibility === 'visible') {
+        // Closed with the X button or Escape: hand focus back to the burger
+        if (menu.contains(document.activeElement)) burger.focus({ preventScroll: true });
         const done = () => {
           gsap.set(menu, { visibility: 'hidden' });
         };
@@ -135,14 +146,20 @@ export function Nav() {
 
   const go = (id: string) => (e: MouseEvent) => {
     e.preventDefault();
-    const wasOpen = open;
-    setOpen(false);
-    if (wasOpen) {
-      burgerRef.current?.focus({ preventScroll: true });
-      window.setTimeout(() => goToSection(id), prefersReducedMotion() ? 0 : 280);
-    } else {
+    if (!open) {
       goToSection(id);
+      return;
     }
+    // The menu covers the whole screen: unlock scrolling, jump to the section behind it,
+    // then close the menu so the destination is revealed (instant and reliable on phones).
+    document.documentElement.classList.remove('menu-open');
+    document.getElementById('main')?.removeAttribute('inert');
+    document.querySelector('footer')?.removeAttribute('inert');
+    requestAnimationFrame(() => {
+      jumpTo(id);
+      focusSection(id);
+      setOpen(false);
+    });
   };
 
   const classes = ['nav', scrolled && 'is-scrolled', hidden && !open && 'is-hidden', open && 'is-open'].filter(Boolean).join(' ');
@@ -229,12 +246,6 @@ export function Nav() {
               </a>
             </li>
           ))}
-          <li className="menu__item">
-            <a className="menu__link" href="#booking" onClick={go('booking')}>
-              <span className="menu__num">06</span>
-              How to Book
-            </a>
-          </li>
         </ul>
         <div className="menu__foot">
           <a className="btn btn--lg menu__wa" href={waLink()} target="_blank" rel="noopener noreferrer">

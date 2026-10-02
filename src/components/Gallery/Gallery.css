@@ -1,6 +1,8 @@
 .gallery {
   position: relative;
   z-index: 3;
+  /* picks up from the last show (blue-5) and settles one shade darker */
+  background: linear-gradient(180deg, var(--blue-5) 0, var(--blue-6) 45vh);
   padding: clamp(84px, 13vh, 150px) 0 clamp(80px, 12vh, 140px);
   color: #fff;
 }

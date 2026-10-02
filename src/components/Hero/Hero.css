@@ -18,7 +18,7 @@
 .hero__sticky {
   position: sticky;
   top: 0;
-  height: 100svh;
+  height: var(--stage-h);
   min-height: 560px;
   overflow: hidden;
   isolation: isolate;
@@ -52,7 +52,6 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  mix-blend-mode: screen;
 }
 
 .hero__beam {
@@ -268,7 +267,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: calc(var(--nav-h) + 4px) var(--gutter) 92px;
+  padding: calc(var(--nav-h) + 4px) var(--gutter) calc(92px + var(--ui-safe));
 }
 
 .hero__eyebrow {
@@ -421,7 +420,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(16px + var(--safe-bottom));
+  bottom: calc(16px + var(--safe-bottom) + var(--ui-safe));
   z-index: 4;
   width: max-content;
   margin-inline: auto;
@@ -514,7 +513,7 @@
   }
 
   .hero__content {
-    padding-bottom: 84px;
+    padding-bottom: calc(84px + var(--ui-safe));
   }
 
   .hero__ctas {

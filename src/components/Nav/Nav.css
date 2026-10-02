@@ -40,11 +40,10 @@
 .nav.is-scrolled .nav__bar {
   max-width: 1120px;
   height: 60px;
-  background: rgba(27, 8, 54, 0.8);
+  /* solid (no backdrop blur): blurring the page behind a fixed bar costs every scroll frame on phones */
+  background: rgba(6, 24, 60, 0.94);
   border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 14px 34px rgba(10, 0, 30, 0.28);
-  -webkit-backdrop-filter: blur(14px) saturate(1.5);
-  backdrop-filter: blur(14px) saturate(1.5);
+  box-shadow: 0 14px 34px rgba(3, 15, 39, 0.3);
 }
 
 .nav__brand {
@@ -166,7 +165,7 @@
   height: 3px;
   border-radius: 3px;
   background: linear-gradient(90deg, var(--kv-star), var(--magenta), var(--kv-blue));
-  transform: scaleX(var(--p, 0));
+  transform: scaleX(0);
   transform-origin: 0 50%;
   opacity: 0;
   transition: opacity 0.4s;
@@ -248,9 +247,9 @@
   padding: calc(18px + env(safe-area-inset-top, 0px)) 24px calc(24px + var(--safe-bottom));
   overflow-y: auto;
   background:
-    radial-gradient(70% 50% at 100% 0%, rgba(240, 56, 143, 0.35), transparent 70%),
-    radial-gradient(70% 50% at 0% 100%, rgba(46, 107, 255, 0.35), transparent 70%),
-    var(--violet-900);
+    radial-gradient(70% 50% at 100% 0%, rgba(90, 169, 224, 0.28), transparent 70%),
+    radial-gradient(70% 50% at 0% 100%, rgba(42, 116, 191, 0.3), transparent 70%),
+    var(--blue-8);
   color: #fff;
 }
 
