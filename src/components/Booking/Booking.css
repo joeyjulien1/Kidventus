@@ -353,8 +353,15 @@
 }
 
 .builder__control input {
+  display: block;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 54px;
+  height: 54px;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
   padding: 0 14px 0 46px;
   border: 2.5px solid rgba(92, 36, 104, 0.28);
   border-radius: 16px;
@@ -363,6 +370,40 @@
   font-weight: 700;
   color-scheme: light;
   transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* iOS Safari: date fields ignore width/height and centre their value unless reset */
+.builder__date {
+  line-height: 50px;
+  text-align: left;
+}
+
+.builder__date::-webkit-date-and-time-value {
+  margin: 0;
+  text-align: left;
+}
+
+.builder__date::-webkit-calendar-picker-indicator {
+  opacity: 0.55;
+  cursor: pointer;
+}
+
+/* iOS shows an empty box for an unset date — give it a hint like the other fields */
+.builder__date-hint {
+  display: none;
+  position: absolute;
+  left: 46px;
+  top: 50%;
+  translate: 0 -50%;
+  color: #8a7a98;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .builder__date-hint {
+    display: block;
+  }
 }
 
 .builder__control input::placeholder {
@@ -604,7 +645,7 @@
   }
 
   .builder__row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .builder__buttons .btn {

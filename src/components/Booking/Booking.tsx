@@ -231,7 +231,19 @@ export function Booking() {
                 </label>
                 <span className="builder__control">
                   <CalendarIcon className="builder__icon" />
-                  <input id="kv-date" type="date" min={todayISO()} value={date} onChange={(e) => setDate(e.target.value)} />
+                  <input
+                    id="kv-date"
+                    className="builder__date"
+                    type="date"
+                    min={todayISO()}
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                  />
+                  {!date && (
+                    <span className="builder__date-hint" aria-hidden="true">
+                      Pick a date
+                    </span>
+                  )}
                 </span>
               </div>
               <div className="builder__input">
